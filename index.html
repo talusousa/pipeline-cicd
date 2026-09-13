@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Projeto de automação CI/CD com GitHub Actions."
+  >
+
+  <title>Pipeline CI/CD com GitHub Actions</title>
+
+  <style>
+    :root {
+      --azul-escuro: #0f172a;
+      --azul: #2563eb;
+      --azul-claro: #dbeafe;
+      --verde: #16a34a;
+      --verde-claro: #dcfce7;
+      --cinza-claro: #f1f5f9;
+      --cinza: #64748b;
+      --branco: #ffffff;
+      --texto: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--cinza-claro);
+      color: var(--texto);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--azul-escuro);
+      color: var(--branco);
+      padding: 20px 8%;
+    }
+
+    nav {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+      margin: auto;
+      max-width: 1200px;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      list-style: none;
+    }
+
+    .menu a {
+      color: var(--branco);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .menu a:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a, #2563eb);
+      color: var(--branco);
+      display: flex;
+      min-height: 500px;
+      padding: 70px 8%;
+    }
+
+    .hero-conteudo {
+      margin: auto;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .etiqueta {
+      background-color: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 30px;
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 8px 16px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      max-width: 850px;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      margin-bottom: 30px;
+      max-width: 760px;
+    }
+
+    .botao {
+      background-color: var(--branco);
+      border-radius: 8px;
+      color: var(--azul);
+      display: inline-block;
+      font-weight: bold;
+      padding: 13px 24px;
+      text-decoration: none;
+    }
+
+    main {
+      margin: auto;
+      max-width: 1200px;
+      padding: 70px 8%;
+    }
+
+    section {
+      margin-bottom: 70px;
+    }
+
+    .titulo-secao {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .titulo-secao h2 {
+      color: var(--azul-escuro);
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .titulo-secao p {
+      color: var(--cinza);
+    }
+
+    .objetivo {
+      background-color: var(--branco);
+      border-left: 6px solid var(--azul);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+      padding: 30px;
+    }
+
+    .cards {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .card {
+      background-color: var(--branco);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+      padding: 28px;
+    }
+
+    .numero {
+      align-items: center;
+      background-color: var(--azul-claro);
+      border-radius: 50%;
+      color: var(--azul);
+      display: flex;
+      font-size: 1.1rem;
+      font-weight: bold;
+      height: 48px;
+      justify-content: center;
+      margin-bottom: 18px;
+      width: 48px;
+    }
+
+    .card h3 {
+      color: var(--azul-escuro);
+      margin-bottom: 10px;
+    }
+
+    .status {
+      align-items: center;
+      background-color: var(--verde-claro);
+      border: 1px solid #86efac;
+      border-radius: 12px;
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .status-indicador {
+      background-color: var(--verde);
+      border-radius: 50%;
+      height: 18px;
+      width: 18px;
+    }
+
+    .status h2 {
+      color: #166534;
+    }
+
+    .tecnologias {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .tecnologia {
+      background-color: var(--azul-escuro);
+      border-radius: 30px;
+      color: var(--branco);
+      font-weight: bold;
+      padding: 10px 18px;
+    }
+
+    footer {
+      background-color: var(--azul-escuro);
+      color: var(--branco);
+      padding: 35px 8%;
+      text-align: center;
+    }
+
+    footer p + p {
+      color: #cbd5e1;
+      margin-top: 7px;
+    }
+
+    @media (max-width: 650px) {
+      nav {
+        justify-content: center;
+      }
+
+      .menu {
+        justify-content: center;
+      }
+
+      .hero {
+        min-height: 430px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav aria-label="Navegação principal">
+      <div class="logo">Pipeline CI/CD</div>
+
+      <ul class="menu">
+        <li>#objetivoObjetivo</a></li>
+        <li>#pipelinePipeline</a></li>
+        <li>#deployDeploy</a></li>
+        <li>#tecnologiasTecnologias</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-conteudo">
+      <span class="etiqueta">
+        Engenharia de Dados | DevOps e DataOps
+      </span>
+
+      <h1>
+        Automação de pipeline CI/CD com GitHub Actions
+      </h1>
+
+      <p>
+        Projeto desenvolvido para demonstrar a integração e a entrega
+        contínuas de uma aplicação web, desde o envio do código até a
+        publicação automática no GitHub Pages.
+      </p>
+
+      #pipeline
+        Conhecer a pipeline
+      </a>
+    </div>
+  </section>
+
+  <main>
+    <section id="objetivo">
+      <div class="titulo-secao">
+        <h2>Objetivo do projeto</h2>
+        <p>
+          Automatizar o processo de validação e publicação da aplicação.
+        </p>
+      </div>
+
+      <div class="objetivo">
+        <p>
+          A pipeline foi criada para identificar alterações enviadas à
+          branch principal do repositório e executar automaticamente as
+          etapas necessárias para publicar a página no GitHub Pages.
+          A automação reduz intervenções manuais, padroniza o processo
+          de deploy e permite acompanhar o resultado de cada execução.
+        </p>
+      </div>
+    </section>
+
+    <section id="pipeline">
+      <div class="titulo-secao">
+        <h2>Etapas da pipeline</h2>
+        <p>
+          Fluxo executado automaticamente após um push na branch main.
+        </p>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <div class="numero">1</div>
+          <h3>Push</h3>
+          <p>
+            Uma alteração é enviada para a branch main do repositório.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="numero">2</div>
+          <h3>Checkout</h3>
+          <p>
+            O GitHub Actions obtém os arquivos mais recentes do projeto.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="numero">3</div>
+          <h3>Validação</h3>
+          <p>
+            A pipeline verifica se o arquivo index.html está presente.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="numero">4</div>
+          <h3>Deploy</h3>
+          <p>
+            Os arquivos são publicados automaticamente no GitHub Pages.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="deploy">
+      <div class="titulo-secao">
+        <h2>Status do deploy</h2>
+        <p>
+          Resultado esperado após a execução completa do workflow.
+        </p>
+      </div>
+
+      <div class="status">
+        <span
+          class="status-indicador"
+          aria-hidden="true"
+        ></span>
+
+        <div>
+          <h2>Aplicação publicada com sucesso</h2>
+          <p>
+            Deploy automatizado com GitHub Actions e GitHub Pages.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tecnologias">
+      <div class="titulo-secao">
+        <h2>Tecnologias utilizadas</h2>
+        <p>
+          Recursos utilizados no desenvolvimento e na automação.
+        </p>
+      </div>
+
+      <div class="tecnologias">
+        <span class="tecnologia">HTML5</span>
+        <span class="tecnologia">CSS3</span>
+        <span class="tecnologia">Git</span>
+        <span class="tecnologia">GitHub</span>
+        <span class="tecnologia">GitHub Actions</span>
+        <span class="tecnologia">GitHub Pages</span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Projeto acadêmico de Pipeline CI/CD</p>
+    <p>Desenvolvido por Talita Sousa e integrantes do grupo.</p>
+  </footer>
+</body>
+</html>
